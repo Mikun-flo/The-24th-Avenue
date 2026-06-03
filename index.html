@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     <title>The 24th Avenue- Jewelry Website</title> 
+     <link rel="stylesheet" href="cssT2A.css" />
+     <link rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+   />
+
+  <body>
+     <!-- Header with Cart Icon --> 
+     <header>
+         <nav>
+           <a href="#" class="logo">The 24th Avenue</a>
+        <div class="nav-links">      
+             <a href="#home">Home</a>
+             <a href="#shop">Shop</a>
+             <a href="#about">About</a>
+             <a href="#contact">Contact</a>
+
+          <!-- Cart Icon -->
+          <div class="cart-icon" onclick="toggleCart()">
+             🛒
+             <span class="cart-count" id="cartCount">0</span>
+           </div>
+        </div>
+      </nav>
+
+      <!-- Cart Dropdown -->
+      <div class="cart-dropdown" id="cartDropdown">
+        <div id="cartItems">
+          <p class="empty-cart">Your cart is empty</p>
+        </div>
+        <div class="cart-total" id="cartTotal">Total: ₦0</div>
+        <button class="checkout-btn" onclick="checkout()">Checkout</button>
+      </div>
+
+      <!-- Notification Messages -->
+      <div id="addedNotification" class="notification added-notification">
+        ✓ Added to cart
+      </div>
+      <div id="thankYouNotification" class="notification thank-you-notification">
+        ✓ Thank you for your purchase, Enjoy your new piece!
+      </div>
+     </header>
+
+      <!-- Header 
+      <header>
+         <nav>
+             <a href="#" class="logo">The 24th Avenue</a>
+             <ul>
+                 <li><a href="#home">Home</a></li>
+                 <li><a href="#shop">Shop</a></li>
+                 <li><a href="#about">About Us</a></li>
+                 <li><a href="#contact">Contact Us</a></li>
+              </ul>
+           </nav>
+        </header>
+
+     <!-- Hero Section -->
+     <section id="home" class="hero">
+         <div>
+             <h1>Welcome to The 24th Avenue</h1>
+             <p>Discover exquisite jewelry that shines with elegance</p>
+           </div>
+      </section>
+
+     <!-- Products Section -->
+      <section id="shop" class="products">
+          <h2>Featured Jewelry</h2>
+          <div class="product-grid">
+          <div class="product-item">
+             <img src="images/Gold Necklace.webp" alt="Gold Necklace" />
+             <h3>Gold Necklace</h3>
+             <p>₦10,000</p>
+             <button
+                 class="add-to-cart-btn"
+                 onclick="addToCart('Gold Necklace', 10000, 'images/Gold Necklace.webp')"
+                  >
+                 Add to Cart
+             </button>
+           </div>
+        <div class="product-item">
+          <img src="images/Diamond Ring.jpg" alt="Ring" />
+          <h3>Diamond Ring</h3>
+          <p>₦800,000</p>
+          <button
+            class="add-to-cart-btn"
+            onclick="addToCart('Diamond Ring', 800000, 'images/Diamond Ring.jpg')"
+          >
+            Add to Cart
+          </button>
+        </div>
+        <div class="product-item">
+          <img src="images/Pearl Earrings.webp" alt="Earrings" />
+          <h3>Pearl Earrings</h3>
+          <p>₦5,000</p>
+          <button
+            class="add-to-cart-btn"
+            onclick="addToCart('Pearl Earrings', 5000, 'images/Pearl Earrings.webp')"
+          >
+            Add to Cart
+          </button>
+        </div>
+        <div class="product-item">
+          <img src="images/Silver Bracelet.webp" alt="Bracelet" />
+          <h3>Silver Bracelet</h3>
+          <p>₦20,000</p>
+          <button
+            class="add-to-cart-btn"
+            onclick="addToCart('Silver Bracelet', 20000, 'images/Silver Bracelet.webp')"
+          >
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+      <h2>About Us</h2>
+      <p> 
+        The 24th Avenue is a premier jewelry store offering high-quality,
+        handcrafted pieces for every occasion. Our collection features timeless
+        designs that blend tradition with modern elegance. We are committed to
+        providing exceptional customer service and ensuring every piece tells a
+        story.
+      </p>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+      <h2>Contact Us</h2>
+      <form
+        action="https://formspree.io/f/xojvgjze"
+        method="POST"
+        class="contact-form"
+      >
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>
+         &copy; 2025 The 24th Avenue. All rights reserved. |
+         <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+      </p>
+    </footer>
+
+    <!--JavaScript for Cart Functionality -->
+    <script>
+        // Cart array now stores objects with quantity
+        let cart = [];
+        let total = 0;
+
+        function addToCart(name, price, image) {
+            // Check if item already exists
+            const existingItem = cart.find(item => item.name === name);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ name, price, image, quantity: 1 });
+            }
+
+            updateTotal();
+            updateCartDisplay();
+            showNotification('addedNotification');
+        }
+
+        function removeItem(index) {
+            const item = cart[index];
+            total -= item.price * item.quantity;
+            cart.splice(index, 1);
+            
+            updateTotal();
+            updateCartDisplay();
+        }
+
+        function changeQuantity(index, change) {
+            const item = cart[index];
+            item.quantity += change;
+
+            if (item.quantity <= 0) {
+                removeItem(index);
+                return;
+            }
+
+            updateTotal();
+            updateCartDisplay();
+        }
+
+        function updateTotal() {
+            total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('cartCount').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        }
+
+        function updateCartDisplay() {
+            const cartItemsDiv = document.getElementById('cartItems');
+            const cartTotalDiv = document.getElementById('cartTotal');
+
+            if (cart.length === 0) {
+                cartItemsDiv.innerHTML = '<p class="empty-cart">Your cart is empty</p>';
+                cartTotalDiv.textContent = 'Total: ₦0';
+                return;
+            }
+
+            let itemsHTML = '';
+            cart.forEach((item, index) => {
+                itemsHTML += `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="cart-item-details">
+                            <h4>${item.name}</h4>
+                            <p>₦${item.price.toLocaleString()} each</p>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="changeQuantity(${index}, -1)">−</button>
+                                <span class="quantity">${item.quantity}</span>
+                                <button class="quantity-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                            </div>
+                        </div>
+                        <button class="remove-item" onclick="removeItem(${index})" title="Remove">✕</button>
+                    </div>
+                `;
+            });
+
+            cartItemsDiv.innerHTML = itemsHTML;
+            cartTotalDiv.textContent = `Total: ₦${total.toLocaleString()}`;
+        }
+
+        function toggleCart() {
+            const dropdown = document.getElementById('cartDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            // Clear cart after checkout
+            cart = [];
+            total = 0;
+            updateCartDisplay();
+            document.getElementById('cartCount').textContent = '0';
+            document.getElementById('cartDropdown').classList.remove('show');
+            showNotification('thankYouNotification');
+        }
+
+        function showNotification(notificationId) {
+            const notification = document.getElementById(notificationId);
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }u
+
+        // Close dropdown when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.closest('.cart-icon') && !event.target.closest('.cart-dropdown') && !event.target.closest('.quantity-btn') && !event.target.closest('.remove-item')) {
+                const dropdown = document.getElementById('cartDropdown');
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        }
+   </script>
+  </body>
+</html>
